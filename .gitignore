@@ -1,0 +1,14 @@
+# build output
+/app
+/out/
+dist/
+build/
+
+# env / secrets
+.env
+.env.*
+
+# editors
+.idea/
+.vscode/
+.DS_Store

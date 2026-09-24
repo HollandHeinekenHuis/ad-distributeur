@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # CloudNativePG operator + CRDs (pinned release, resolved by the Render step)
+  - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.27/releases/cnpg-1.27.4.yaml
+  - postgres-cluster.yaml
+  - deployment.yaml
+  - service.yaml
+  - httproute.yaml
+
+patches:
+  # Give the operator Guaranteed memory (request == limit) to fit the namespace policy.
+  - target:
+      kind: Deployment
+      name: cnpg-controller-manager
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
